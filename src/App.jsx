@@ -1,123 +1,158 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 
-const FEED_IMAGES = [
-  'img01.png', 'img02.jpg', 'img03.jpg', 'img04.png', 'img05.jpg',
-  'img06.jpg', 'img07.jpg', 'img08.jpg', 'img09.jpg', 'img10.jpg'
+const INITIAL_PLACES = [
+  {
+    id: 1,
+    name: '강남역 브런치 카페',
+    description: '밝은 분위기 / 브런치 메뉴 다양',
+    votes: 3,
+  },
+  {
+    id: 2,
+    name: '홍대 파스타 맛집',
+    description: '예약 가능 / 단체석 있음',
+    votes: 5,
+  },
+  {
+    id: 3,
+    name: '여의도 한강 피크닉존',
+    description: '날씨 좋을 때 야외 모임 추천',
+    votes: 2,
+  },
 ]
 
-const POSTS = FEED_IMAGES.map((img, i) => ({
-  id: i + 1,
-  profileImage: i % 2 === 0 ? 'man.jpg' : 'woman.jpg',
-  username: i % 2 === 0 ? 'travel_man' : 'daily_woman',
-  image: img,
-  likes: Math.floor(Math.random() * 500) + 100,
-  caption: i % 2 === 0
-    ? '오늘도 좋은 하루 🌞'
-    : '잊지 못할 순간 ✨',
-  commentCount: Math.floor(Math.random() * 30)
-}))
-
 function App() {
-  const [liked, setLiked] = useState({})
+  const [places, setPlaces] = useState(INITIAL_PLACES)
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null)
+  const [newPlaceName, setNewPlaceName] = useState('')
+  const [newPlaceDescription, setNewPlaceDescription] = useState('')
 
-  const toggleLike = (id) => {
-    setLiked(prev => ({ ...prev, [id]: !prev[id] }))
+  const totalVotes = useMemo(
+    () => places.reduce((sum, place) => sum + place.votes, 0),
+    [places],
+  )
+
+  const sortedPlaces = useMemo(
+    () => [...places].sort((a, b) => b.votes - a.votes),
+    [places],
+  )
+
+  const handleVote = (nextPlaceId) => {
+    setPlaces((prev) =>
+      prev.map((place) => {
+        if (place.id === selectedPlaceId && selectedPlaceId !== nextPlaceId) {
+          return { ...place, votes: Math.max(0, place.votes - 1) }
+        }
+
+        if (place.id === nextPlaceId && selectedPlaceId !== nextPlaceId) {
+          return { ...place, votes: place.votes + 1 }
+        }
+
+        return place
+      }),
+    )
+    setSelectedPlaceId(nextPlaceId)
   }
 
-  const imgUrl = (name) => `/profile_images/${name}`
+  const handleAddPlace = (event) => {
+    event.preventDefault()
+    const trimmedName = newPlaceName.trim()
+    const trimmedDescription = newPlaceDescription.trim()
+
+    if (!trimmedName) {
+      return
+    }
+
+    const nextId = places.length > 0 ? Math.max(...places.map((p) => p.id)) + 1 : 1
+
+    setPlaces((prev) => [
+      ...prev,
+      {
+        id: nextId,
+        name: trimmedName,
+        description: trimmedDescription || '설명 없음',
+        votes: 0,
+      },
+    ])
+    setNewPlaceName('')
+    setNewPlaceDescription('')
+  }
 
   return (
     <div className="app">
-      {/* 헤더 */}
       <header className="header">
-        <h1 className="logo">Instagram</h1>
-        <div className="header-actions">
-          <span className="icon">❤</span>
-          <span className="icon">✉</span>
-        </div>
+        <p className="meeting-label">이번 주 모임</p>
+        <h1>모임 장소 투표</h1>
+        <p className="meeting-meta">총 투표수: {totalVotes}표</p>
       </header>
 
-      {/* 스토리 */}
-      <section className="stories">
-        <div className="story-scroll">
-          <div className="story-item">
-            <div className="story-ring">
-              <img src={imgUrl('man.jpg')} alt="man" />
-            </div>
-            <span>남성</span>
-          </div>
-          <div className="story-item">
-            <div className="story-ring">
-              <img src={imgUrl('woman.jpg')} alt="woman" />
-            </div>
-            <span>여성</span>
-          </div>
-          {POSTS.slice(0, 4).map((p, i) => (
-            <div key={p.id} className="story-item">
-              <div className="story-ring">
-                <img src={imgUrl(p.image)} alt="" />
-              </div>
-              <span>스토리 {i + 1}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <main className="content">
+        <section className="vote-card">
+          <h2>장소 선택</h2>
+          <p className="section-desc">원하는 장소를 1곳 선택해 주세요. 다시 누르면 선택은 유지됩니다.</p>
 
-      {/* 피드 */}
-      <main className="feed">
-        {POSTS.map((post) => (
-          <article key={post.id} className="post">
-            <div className="post-header">
-              <div className="post-profile">
-                <img src={imgUrl(post.profileImage)} alt={post.username} />
-                <span className="post-username">{post.username}</span>
-              </div>
-              <button type="button" className="post-more">⋯</button>
-            </div>
-            <div className="post-image-wrap">
-              <img
-                src={imgUrl(post.image)}
-                alt=""
-                className="post-image"
+          <ul className="place-list">
+            {sortedPlaces.map((place) => {
+              const percentage = totalVotes === 0 ? 0 : Math.round((place.votes / totalVotes) * 100)
+              const isSelected = selectedPlaceId === place.id
+
+              return (
+                <li key={place.id} className={`place-item ${isSelected ? 'selected' : ''}`}>
+                  <button
+                    type="button"
+                    className="place-button"
+                    onClick={() => handleVote(place.id)}
+                  >
+                    <div className="place-row">
+                      <div>
+                        <p className="place-name">{place.name}</p>
+                        <p className="place-desc">{place.description}</p>
+                      </div>
+                      <div className="place-score">
+                        <strong>{place.votes}표</strong>
+                        <span>{percentage}%</span>
+                      </div>
+                    </div>
+                    <div className="progress-track" aria-hidden="true">
+                      <div
+                        className="progress-bar"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+
+        <section className="vote-card add-card">
+          <h2>장소 제안</h2>
+          <p className="section-desc">원하는 장소가 없다면 새 후보를 추가할 수 있어요.</p>
+          <form className="add-form" onSubmit={handleAddPlace}>
+            <label className="field">
+              <span>장소 이름</span>
+              <input
+                type="text"
+                value={newPlaceName}
+                onChange={(event) => setNewPlaceName(event.target.value)}
+                placeholder="예: 성수동 루프탑 바"
               />
-            </div>
-            <div className="post-actions">
-              <button
-                type="button"
-                className={`action-btn ${liked[post.id] ? 'liked' : ''}`}
-                onClick={() => toggleLike(post.id)}
-                aria-label="좋아요"
-              >
-                {liked[post.id] ? '❤' : '🤍'}
-              </button>
-              <span className="action-btn">💬</span>
-              <span className="action-btn">↗</span>
-              <span className="action-btn save">🔖</span>
-            </div>
-            <div className="post-likes">
-              좋아요 {post.likes + (liked[post.id] ? 1 : 0)}개
-            </div>
-            <div className="post-caption">
-              <strong>{post.username}</strong> {post.caption}
-            </div>
-            {post.commentCount > 0 && (
-              <button type="button" className="post-comments-link">
-                댓글 {post.commentCount}개 모두 보기
-              </button>
-            )}
-          </article>
-        ))}
+            </label>
+            <label className="field">
+              <span>간단 설명</span>
+              <input
+                type="text"
+                value={newPlaceDescription}
+                onChange={(event) => setNewPlaceDescription(event.target.value)}
+                placeholder="예: 야경 좋고 대화하기 편함"
+              />
+            </label>
+            <button type="submit" className="add-button">후보 추가하기</button>
+          </form>
+        </section>
       </main>
-
-      {/* 하단 네비 */}
-      <nav className="bottom-nav">
-        <span className="nav-item active">🏠</span>
-        <span className="nav-item">🔍</span>
-        <span className="nav-item">➕</span>
-        <span className="nav-item">❤</span>
-        <span className="nav-item">👤</span>
-      </nav>
     </div>
   )
 }
