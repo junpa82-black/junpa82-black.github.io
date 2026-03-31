@@ -1,242 +1,193 @@
 .app {
-  max-width: 470px;
+  max-width: 760px;
   margin: 0 auto;
   min-height: 100vh;
-  background: #fafafa;
-  padding-bottom: 60px;
+  padding: 28px 16px 40px;
 }
 
-/* 헤더 */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 56px;
-  padding: 0 16px;
-  background: #fff;
-  border-bottom: 1px solid #dbdbdb;
+  margin-bottom: 16px;
 }
 
-.logo {
-  font-family: 'Lobster', 'Georgia', cursive;
-  font-size: 1.5rem;
-  font-weight: 400;
+.meeting-label {
+  margin: 0 0 8px;
+  font-size: 0.86rem;
+  color: #6b7280;
+}
+
+.header h1 {
   margin: 0;
-  color: #262626;
+  font-size: 1.85rem;
+  color: #111827;
 }
 
-.header-actions {
-  display: flex;
-  gap: 20px;
+.meeting-meta {
+  margin: 8px 0 0;
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-.header-actions .icon {
-  font-size: 1.4rem;
-  cursor: pointer;
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
 }
 
-/* 스토리 */
-.stories {
+.vote-card {
   background: #fff;
-  border-bottom: 1px solid #dbdbdb;
-  padding: 12px 0;
-  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 6px 24px rgba(17, 24, 39, 0.06);
 }
 
-.story-scroll {
-  display: flex;
-  gap: 16px;
-  padding: 0 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
+.vote-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  color: #111827;
 }
 
-.story-scroll::-webkit-scrollbar {
-  display: none;
+.section-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
-.story-item {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.story-ring {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  padding: 3px;
-  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.story-ring img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-}
-
-.story-item span {
-  font-size: 0.7rem;
-  color: #262626;
-  max-width: 64px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* 피드 */
-.feed {
-  padding: 12px 0;
-}
-
-.post {
-  background: #fff;
-  margin-bottom: 24px;
-  border: 1px solid #dbdbdb;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.post-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-}
-
-.post-profile {
-  display: flex;
-  align-items: center;
+.place-list {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
   gap: 10px;
 }
 
-.post-profile img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.post-username {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #262626;
-}
-
-.post-more {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 4px;
-  color: #262626;
-}
-
-.post-image-wrap {
-  width: 100%;
-  aspect-ratio: 1;
-  background: #000;
-}
-
-.post-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.post-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 14px 4px;
-}
-
-.action-btn {
-  font-size: 1.4rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-}
-
-.action-btn.save {
-  margin-left: auto;
-}
-
-.action-btn.liked {
-  animation: like 0.3s ease;
-}
-
-@keyframes like {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
-
-.post-likes {
-  padding: 0 14px 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #262626;
-}
-
-.post-caption {
-  padding: 0 14px 8px;
-  font-size: 0.9rem;
-  color: #262626;
-  line-height: 1.4;
-}
-
-.post-caption strong {
-  margin-right: 6px;
-}
-
-.post-comments-link {
-  padding: 0 14px 12px;
-  font-size: 0.85rem;
-  color: #8e8e8e;
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: block;
-  text-align: left;
-}
-
-/* 하단 네비 */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 470px;
-  height: 50px;
+.place-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   background: #fff;
-  border-top: 1px solid #dbdbdb;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  z-index: 10;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.nav-item {
-  font-size: 1.4rem;
+.place-item:hover {
+  border-color: #c7d2fe;
+}
+
+.place-item.selected {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.place-button {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px;
+  text-align: left;
   cursor: pointer;
-  opacity: 0.7;
 }
 
-.nav-item.active {
-  opacity: 1;
+.place-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.place-name {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.place-desc {
+  margin: 6px 0 0;
+  font-size: 0.84rem;
+  color: #6b7280;
+}
+
+.place-score {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.place-score strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.place-score span {
+  color: #6b7280;
+  font-size: 0.84rem;
+}
+
+.progress-track {
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #e5e7eb;
+  margin-top: 12px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+  transition: width 0.25s ease;
+}
+
+.add-form {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field span {
+  color: #374151;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.field input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+
+.add-button {
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-button:hover {
+  background: #4338ca;
+}
+
+@media (min-width: 700px) {
+  .content {
+    grid-template-columns: 1.3fr 1fr;
+    align-items: start;
+  }
 }
